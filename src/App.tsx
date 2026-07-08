@@ -9,8 +9,6 @@ interface WeighbridgeLog {
   name: string
   vehicleNumber: string
   rstNumber: string
-  grossWeight: number
-  tareWeight: number
   netWeight: number
   rate: number
   amount: number
@@ -22,8 +20,6 @@ interface FormState {
   name: string
   vehicleNumber: string
   rstNumber: string
-  grossWeight: string
-  tareWeight: string
   netWeight: string
   rate: string
   amount: string
@@ -71,8 +67,6 @@ export default function App() {
     name: '',
     vehicleNumber: '',
     rstNumber: '',
-    grossWeight: '',
-    tareWeight: '',
     netWeight: '0',
     rate: '',
     amount: '0',
@@ -142,8 +136,6 @@ export default function App() {
         'name',
         'vehicleNumber',
         'rstNumber',
-        'grossWeight',
-        'tareWeight',
         'netWeight',
         'rate',
         'amount',
@@ -166,8 +158,6 @@ export default function App() {
     e.preventDefault()
 
     const serialNum = parseInt(form.serialNumber)
-    const gross = parseFloat(form.grossWeight)
-    const tare = parseFloat(form.tareWeight)
     const net = parseFloat(form.netWeight)
     const rateVal = parseFloat(form.rate)
 
@@ -192,14 +182,6 @@ export default function App() {
       triggerToast('Please enter an RST Number.', 'error')
       return
     }
-    if (isNaN(gross) || gross <= 0) {
-      triggerToast('Please enter a valid Gross Weight greater than 0.', 'error')
-      return
-    }
-    if (isNaN(tare) || tare < 0) {
-      triggerToast('Please enter a valid Tare Weight.', 'error')
-      return
-    }
     if (isNaN(net) || net < 0) {
       triggerToast('Please enter a valid Net Weight.', 'error')
       return
@@ -221,8 +203,6 @@ export default function App() {
       name: form.name.trim(),
       vehicleNumber: form.vehicleNumber.trim(),
       rstNumber: form.rstNumber.trim(),
-      grossWeight: gross,
-      tareWeight: tare,
       netWeight: net,
       rate: rateVal,
       amount: amt
@@ -251,8 +231,6 @@ export default function App() {
       name: '',
       vehicleNumber: '',
       rstNumber: '',
-      grossWeight: '',
-      tareWeight: '',
       netWeight: '',
       rate: form.rate, // keep rate for ease of repeated entry
       amount: ''
@@ -275,8 +253,6 @@ export default function App() {
       name: log.name,
       vehicleNumber: log.vehicleNumber,
       rstNumber: log.rstNumber,
-      grossWeight: String(log.grossWeight),
-      tareWeight: String(log.tareWeight),
       netWeight: String(log.netWeight),
       rate: String(log.rate),
       amount: String(log.amount),
@@ -442,8 +418,6 @@ export default function App() {
       'Supplier/Customer Name': log.name,
       'Vehicle Number': log.vehicleNumber,
       'RST Number': log.rstNumber,
-      'Gross Weight (kg)': log.grossWeight,
-      'Tare Weight (kg)': log.tareWeight,
       'Net Weight (kg)': log.netWeight,
       'Rate per kg (₹)': log.rate,
       'Total Amount (₹)': log.amount
@@ -460,8 +434,6 @@ export default function App() {
       { wch: 25 }, // Supplier Name
       { wch: 18 }, // Vehicle Number
       { wch: 15 }, // RST Number
-      { wch: 18 }, // Gross Weight
-      { wch: 18 }, // Tare Weight
       { wch: 18 }, // Net Weight
       { wch: 15 }, // Rate
       { wch: 18 }  // Total Amount
@@ -657,45 +629,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label" htmlFor="grossWeight">
-                  Gross Weight <span className="hint">(kg)</span>
-                </label>
-                <input
-                  type="number"
-                  id="grossWeight"
-                  name="grossWeight"
-                  value={form.grossWeight}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="e.g. 15400"
-                  className="form-input"
-                  min="0"
-                  step="any"
-                  required
-                />
-              </div>
 
-              <div className="form-group">
-                <label className="form-label" htmlFor="tareWeight">
-                  Tare Weight <span className="hint">(kg)</span>
-                </label>
-                <input
-                  type="number"
-                  id="tareWeight"
-                  name="tareWeight"
-                  value={form.tareWeight}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="e.g. 5200"
-                  className="form-input"
-                  min="0"
-                  step="any"
-                  required
-                />
-              </div>
-            </div>
 
             <div className="form-row">
               <div className="form-group">
@@ -914,18 +848,7 @@ export default function App() {
                         <span className="sort-indicator">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
                       )}
                     </th>
-                    <th className="sortable" onClick={() => handleSort('grossWeight')}>
-                      Gross
-                      {sortConfig.key === 'grossWeight' && (
-                        <span className="sort-indicator">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
-                      )}
-                    </th>
-                    <th className="sortable" onClick={() => handleSort('tareWeight')}>
-                      Tare
-                      {sortConfig.key === 'tareWeight' && (
-                        <span className="sort-indicator">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
-                      )}
-                    </th>
+
                     <th className="sortable" onClick={() => handleSort('netWeight')}>
                       Net Weight
                       {sortConfig.key === 'netWeight' && (
@@ -973,8 +896,7 @@ export default function App() {
                         <td>
                           <span className="rst-badge">{log.rstNumber}</span>
                         </td>
-                        <td className="weight-badge gross">{log.grossWeight.toLocaleString()} kg</td>
-                        <td className="weight-badge tare">{log.tareWeight.toLocaleString()} kg</td>
+
                         <td>
                           <span className="weight-badge net">{log.netWeight.toLocaleString()} kg</span>
                         </td>
