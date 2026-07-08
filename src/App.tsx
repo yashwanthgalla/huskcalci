@@ -103,21 +103,7 @@ export default function App() {
     return () => clearInterval(timer)
   }, [])
 
-  // --- Auto-calculators for Value ---
-  const netNum = parseFloat(form.netWeight) || 0
-  const rateNum = parseFloat(form.rate) || 0
-
-  const calculatedAmount = useMemo(() => {
-    return Math.round(netNum * rateNum * 100) / 100
-  }, [netNum, rateNum])
-
-  // Update calculated fields in form state
-  useEffect(() => {
-    setForm(prev => ({
-      ...prev,
-      amount: String(calculatedAmount),
-    }))
-  }, [calculatedAmount])
+  // No auto-calculators. Amount is manually entered by the user.
 
   // --- Toast Manager ---
   const triggerToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
@@ -160,6 +146,7 @@ export default function App() {
         'tareWeight',
         'netWeight',
         'rate',
+        'amount',
       ]
       const target = e.target as HTMLInputElement
       const currentIndex = fieldOrder.indexOf(target.name)
@@ -221,8 +208,11 @@ export default function App() {
       triggerToast('Please enter a valid Rate.', 'error')
       return
     }
-
-    const amt = Math.round(net * rateVal * 100) / 100
+    const amt = parseFloat(form.amount)
+    if (isNaN(amt) || amt < 0) {
+      triggerToast('Please enter a valid Amount.', 'error')
+      return
+    }
 
     const updatedLog: WeighbridgeLog = {
       id: editingId || Math.random().toString(36).substring(2, 9),
@@ -265,7 +255,7 @@ export default function App() {
       tareWeight: '',
       netWeight: '',
       rate: form.rate, // keep rate for ease of repeated entry
-      amount: '0'
+      amount: ''
     })
   }
 
@@ -749,15 +739,20 @@ export default function App() {
 
             <div className="form-group full-width">
               <label className="form-label" htmlFor="amount">
-                Total Valuation Amount <span className="hint">(Auto, Net x Rate)</span>
+                Total Valuation Amount <span className="hint">(Amount in ₹)</span>
               </label>
               <input
-                type="text"
+                type="number"
                 id="amount"
                 name="amount"
-                value={`₹ ${parseFloat(form.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
-                disabled
-                className="form-input calculated-amount"
+                value={form.amount}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g. 45000"
+                className="form-input"
+                min="0"
+                step="any"
+                required
               />
             </div>
 
