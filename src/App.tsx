@@ -411,8 +411,11 @@ export default function App() {
       return
     }
 
+    // Sort logs in ascending order of Serial Number before exporting to Excel
+    const sortedLogsForExport = [...logsToExport].sort((a, b) => a.serialNumber - b.serialNumber)
+
     // Format data into localized table format for business users
-    const formattedData = logsToExport.map(log => ({
+    const formattedData = sortedLogsForExport.map(log => ({
       'Serial Number': log.serialNumber,
       'Date': log.date,
       'Supplier/Customer Name': log.name,
