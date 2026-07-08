@@ -147,6 +147,33 @@ export default function App() {
     }))
   }
 
+  // --- Keydown handler for Enter to focus next field ---
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const fieldOrder = [
+        'serialNumber',
+        'date',
+        'name',
+        'vehicleNumber',
+        'rstNumber',
+        'grossWeight',
+        'tareWeight',
+        'netWeight',
+        'rate',
+      ]
+      const target = e.target as HTMLInputElement
+      const currentIndex = fieldOrder.indexOf(target.name)
+
+      if (currentIndex !== -1 && currentIndex < fieldOrder.length - 1) {
+        e.preventDefault()
+        const nextField = document.getElementById(fieldOrder[currentIndex + 1])
+        if (nextField) {
+          nextField.focus()
+        }
+      }
+    }
+  }
+
   // --- Log Submission (Add / Edit) ---
   const handleSaveLog = (e: React.FormEvent) => {
     e.preventDefault()
@@ -553,6 +580,7 @@ export default function App() {
                   name="serialNumber"
                   value={form.serialNumber}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder="e.g. 1"
                   className="form-input"
                   min="1"
@@ -570,6 +598,7 @@ export default function App() {
                   name="date"
                   value={form.date}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   className="form-input"
                   required
                 />
@@ -587,6 +616,7 @@ export default function App() {
                 name="name"
                 value={form.name}
                 onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
                 placeholder="Enter name"
                 className="form-input"
                 list="name-suggestions"
@@ -608,6 +638,7 @@ export default function App() {
                   name="vehicleNumber"
                   value={form.vehicleNumber}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder="MH-12-AB-3456"
                   className="form-input"
                   list="vehicle-suggestions"
@@ -628,6 +659,7 @@ export default function App() {
                   name="rstNumber"
                   value={form.rstNumber}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder="RST-00921"
                   className="form-input"
                   required
@@ -646,6 +678,7 @@ export default function App() {
                   name="grossWeight"
                   value={form.grossWeight}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder="e.g. 15400"
                   className="form-input"
                   min="0"
@@ -664,6 +697,7 @@ export default function App() {
                   name="tareWeight"
                   value={form.tareWeight}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder="e.g. 5200"
                   className="form-input"
                   min="0"
@@ -684,6 +718,7 @@ export default function App() {
                   name="netWeight"
                   value={form.netWeight}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder="e.g. 10200"
                   className="form-input"
                   min="0"
@@ -702,6 +737,7 @@ export default function App() {
                   name="rate"
                   value={form.rate}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder="e.g. 4.50"
                   className="form-input"
                   min="0"
